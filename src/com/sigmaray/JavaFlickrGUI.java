@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
  *
  * @author patrick
  */
-public class NFlickrGUI extends javax.swing.JFrame {
+public class JavaFlickrGUI extends javax.swing.JFrame {
     int imageIndex;
     List urlsList = new ArrayList();
     BufferedImage imageToDownload;
@@ -29,7 +29,7 @@ public class NFlickrGUI extends javax.swing.JFrame {
     /**
      * Creates new form NFlickrGUI
      */
-    public NFlickrGUI() {
+    public JavaFlickrGUI() {
         initComponents();
     }
 
@@ -177,7 +177,7 @@ public class NFlickrGUI extends javax.swing.JFrame {
         jLabel3.setText("Downloading URLs...");
         Thread t = new Thread() {
             @Override public void run() {
-                urlsList = NFlickr.flickrListToUrlList(NFlickr.getList(s));
+                urlsList = JavaFlickr.flickrListToUrlList(JavaFlickr.getList(s));
 
 //                try {
 //                    Thread.sleep(10000);
@@ -190,7 +190,7 @@ public class NFlickrGUI extends javax.swing.JFrame {
                        public void run()
                        {
                             jLabel3.setText("");
-                            String t = NFlickr.printRToString(urlsList);
+                            String t = JavaFlickr.printRToString(urlsList);
                             jTextArea1.setText(t);
                             imageIndex = 0;
                             downloadFirstImageInThread();
@@ -310,20 +310,21 @@ public class NFlickrGUI extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JavaFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JavaFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JavaFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(JavaFlickrGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NFlickrGUI().setVisible(true);
+                new JavaFlickrGUI().setVisible(true);
             }
         });
     }

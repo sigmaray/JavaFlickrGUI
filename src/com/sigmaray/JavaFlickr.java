@@ -26,7 +26,7 @@ import org.xml.sax.InputSource;
 import java.awt.Desktop;
 import java.net.URI;
 
-public class NFlickr {
+public class JavaFlickr {
     static String API_KEY = "4cc2a6e2419deebfe86eca026cfda157";
     static String per_page = "20";
     
