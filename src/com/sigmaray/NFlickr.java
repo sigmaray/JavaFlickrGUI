@@ -34,8 +34,6 @@ public class NFlickr {
     static String API_KEY = "4cc2a6e2419deebfe86eca026cfda157";
     static String per_page = "20";
     
-    private static List photosList = new ArrayList();
-    
     public static void printR(Object someObject) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         System.out.println(gson.toJson(someObject));
@@ -50,7 +48,7 @@ public class NFlickr {
         String s = getUrl("pizza");
         StringBuffer xo = fileGetContents(s);
 //        System.out.println(xo);
-        parseXml(xo.toString());
+        List photosList = parseXml(xo.toString());
 //        printR(photosList);
 //        printR(buildImgUrl(photosList.get(0)));
         String url = buildImgUrl((HashMap) photosList.get(0));
@@ -64,10 +62,10 @@ public class NFlickr {
         }        
     }
     
-    public static List getList() {
-        String s = getUrl("pizza");
+    public static List getList(String searchString) {
+        String s = getUrl(searchString);
         StringBuffer xo = fileGetContents(s);
-        parseXml(xo.toString());
+        List photosList = parseXml(xo.toString());
         return photosList;
     }
     
@@ -116,7 +114,8 @@ public class NFlickr {
 
     // http://www.tutorialspoint.com/java_xml/java_dom_parse_document.htm
     // http://stackoverflow.com/questions/562160/in-java-how-do-i-parse-xml-as-a-string-instead-of-a-file
-    public static void parseXml(String xmlString) {
+    public static List parseXml(String xmlString) {
+      List photosList = new ArrayList();
       try {	
 //         File inputFile = new File("input.txt");
          DocumentBuilderFactory dbFactory 
@@ -193,5 +192,6 @@ public class NFlickr {
       } catch (Exception e) {
          e.printStackTrace();
       }
+      return photosList;
    }    
 }
