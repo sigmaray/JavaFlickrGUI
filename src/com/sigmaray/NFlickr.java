@@ -41,6 +41,11 @@ public class NFlickr {
         System.out.println(gson.toJson(someObject));
     }
     
+    public static String printRToString(Object someObject) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(someObject);
+    }
+    
     public static void main(String args[]) {
         String s = getUrl("pizza");
         StringBuffer xo = fileGetContents(s);
@@ -57,6 +62,21 @@ public class NFlickr {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }        
+    }
+    
+    public static List getList() {
+        String s = getUrl("pizza");
+        StringBuffer xo = fileGetContents(s);
+        parseXml(xo.toString());
+        return photosList;
+    }
+    
+    public static List flickrListToUrlList(List flickrList) {        
+        List urlsList = new ArrayList();
+        for (int i = 0; i < flickrList.size(); i++) {
+            urlsList.add(buildImgUrl((HashMap) flickrList.get(i)));
+        }
+        return urlsList;
     }
 
     public static String getUrl(String searchString) {
