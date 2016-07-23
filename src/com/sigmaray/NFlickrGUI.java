@@ -11,8 +11,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -20,7 +23,8 @@ import javax.swing.ImageIcon;
  */
 public class NFlickrGUI extends javax.swing.JFrame {
     int imageIndex;
-    List urlsList;
+    List urlsList = new ArrayList();
+    BufferedImage imageToDownload;
 
     /**
      * Creates new form NFlickrGUI
@@ -46,6 +50,8 @@ public class NFlickrGUI extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,6 +86,10 @@ public class NFlickrGUI extends javax.swing.JFrame {
 
         jTextField1.setText("pizza");
 
+        jLabel3.setText("   ");
+
+        jLabel4.setText("   ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,14 +104,19 @@ public class NFlickrGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton3)
-                                .addGap(33, 33, 33)
-                                .addComponent(jButton2))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(53, 53, 53)
+                                .addComponent(jButton2))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(60, 60, 60)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,13 +129,17 @@ public class NFlickrGUI extends javax.swing.JFrame {
                     .addComponent(jButton1))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton2)
-                            .addComponent(jButton3)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE))
+                            .addComponent(jButton3)
+                            .addComponent(jButton2))))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addContainerGap())
         );
 
@@ -128,26 +147,136 @@ public class NFlickrGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String s = jTextField1.getText();
-        if (s != "") {
-            urlsList = NFlickr.flickrListToUrlList(NFlickr.getList(s));
-            String t = NFlickr.printRToString(urlsList);
-            jTextArea1.setText(t);
-            imageIndex = 0;
-
-            showNextImg();
-            jButton3.setEnabled(true);
-            jButton2.setEnabled(true);
-        }
+        downloadUrlListInThread();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void disableButtons() {
+        jButton1.setEnabled(false);
+        jButton2.setEnabled(false);
+        jButton3.setEnabled(false);
+        jLabel4.setText("imageIndex: " + imageIndex + ", urlsList.size(): " + urlsList.size());
+    }
+    
+    private void enableButtons() {
+        jButton1.setEnabled(true);        
+        if (imageIndex > 0) {
+            jButton3.setEnabled(true);
+        }
+        if (imageIndex < (urlsList.size() - 1)) {
+            jButton2.setEnabled(true);
+        }        
+        jLabel4.setText("imageIndex: " + imageIndex + ", urlsList.size(): " + urlsList.size());
+    }
+    
+    private void downloadUrlListInThread() {
+        final String s = jTextField1.getText();
+        if (s == "") {
+            return;
+        }
+        disableButtons();
+        jLabel3.setText("Downloading URLs...");
+        Thread t = new Thread() {
+            @Override public void run() {
+                urlsList = NFlickr.flickrListToUrlList(NFlickr.getList(s));
+
+//                try {
+//                    Thread.sleep(10000);
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(NFlickrGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+
+                SwingUtilities.invokeLater(
+                    new Runnable() {
+                       public void run()
+                       {
+                            jLabel3.setText("");
+                            String t = NFlickr.printRToString(urlsList);
+                            jTextArea1.setText(t);
+                            imageIndex = 0;
+                            downloadFirstImageInThread();
+                       }
+                    }
+                );
+            }
+        };
+        t.start();
+    }
+    
+    private void downloadFirstImageInThread() {
+        disableButtons();
+        Thread t = new Thread() {
+            @Override public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                SwingUtilities.invokeLater(
+                    new Runnable() {
+                       public void run()
+                       {
+                            jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
+                            enableButtons();
+                       }
+                    }
+                );
+            }
+        };
+        t.start();
+    }    
+    
+    private void downloadNextImageInThread() {
+        if (imageIndex == (urlsList.size() - 1)) {
+            return;
+        }
+        imageIndex++;
+        disableButtons();
+        Thread t = new Thread() {
+            @Override public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                SwingUtilities.invokeLater(
+                    new Runnable() {
+                       public void run()
+                       {
+                            jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));        
+                            enableButtons();
+                       }
+                    }
+                );
+            }
+        };
+        t.start();
+    }
+    
+    private void downloadPrevImageInThread() {
+        if (imageIndex == 0) {
+            return;
+        }
+        imageIndex--;
+        disableButtons();
+        Thread t = new Thread() {
+            @Override public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                SwingUtilities.invokeLater(
+                    new Runnable() {
+                       public void run()
+                       {
+                            BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                            jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));        
+                            enableButtons();
+                       }
+                    }
+                );
+            }
+        };
+        t.start();
+    }
+    
     private BufferedImage downloadImage(String fullUrlPath) {
         BufferedImage img = null;
         try {
            URL url = new URL(fullUrlPath);
            img = ImageIO.read(url);
            ImageIcon icon = new ImageIcon(img);
-//           JOptionPane.showMessageDialog(null, icon);
         } catch (MalformedURLException e) {
            e.printStackTrace();
         } catch (IOException e) {
@@ -157,35 +286,11 @@ public class NFlickrGUI extends javax.swing.JFrame {
     }
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showNextImg();
+        downloadNextImageInThread();
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void showNextImg() {
-        BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
-        jLabel1.setIcon(new javax.swing.ImageIcon(img));        
-        if (imageIndex < (urlsList.size() - 1)) {
-            imageIndex++;
-            jButton3.setEnabled(true);
-        }   
-        if (imageIndex == (urlsList.size() - 1)) {
-            jButton2.setEnabled(false);
-        }
-    }
-    
-    private void showPrevImg() {
-        BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
-        jLabel1.setIcon(new javax.swing.ImageIcon(img));        
-        if (imageIndex > 0) {
-            imageIndex--;
-            jButton2.setEnabled(true);
-        }
-        if (imageIndex == 0) {
-            jButton3.setEnabled(false);
-        }
-    }
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        showPrevImg();
+        downloadPrevImageInThread();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
@@ -229,6 +334,8 @@ public class NFlickrGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
