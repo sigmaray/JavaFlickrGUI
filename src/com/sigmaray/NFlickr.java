@@ -40,21 +40,17 @@ public class NFlickr {
         return gson.toJson(someObject);
     }
     
-    public static void main(String args[]) {
-        String s = getUrl("pizza");
-        StringBuffer xo = fileGetContents(s);
-//        System.out.println(xo);
-        List photosList = parseXml(xo.toString());
-//        printR(photosList);
-//        printR(buildImgUrl(photosList.get(0)));
-        String url = buildImgUrl((HashMap) photosList.get(0));
-        try {
-//            desktop.browse(new URI(url));
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (Exception  e) {
-            e.printStackTrace();
-        }        
-    }
+//    public static void main(String args[]) {
+//        String s = getUrl("pizza");
+//        StringBuffer xo = fileGetContents(s);
+//        List photosList = parseXml(xo.toString());
+//        String url = buildImgUrl((HashMap) photosList.get(0));
+//        try {
+//            Desktop.getDesktop().browse(new URI(url));
+//        } catch (Exception  e) {
+//            e.printStackTrace();
+//        }        
+//    }
     
     public static List getList(String searchString) {
         String s = getUrl(searchString);
