@@ -26,10 +26,6 @@ import org.xml.sax.InputSource;
 import java.awt.Desktop;
 import java.net.URI;
 
-/**
- *
- * @author John
- */
 public class NFlickr {
     static String API_KEY = "4cc2a6e2419deebfe86eca026cfda157";
     static String per_page = "20";
@@ -52,12 +48,10 @@ public class NFlickr {
 //        printR(photosList);
 //        printR(buildImgUrl(photosList.get(0)));
         String url = buildImgUrl((HashMap) photosList.get(0));
-//        System.out.println();
         try {
 //            desktop.browse(new URI(url));
             Desktop.getDesktop().browse(new URI(url));
         } catch (Exception  e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }        
     }
@@ -116,12 +110,9 @@ public class NFlickr {
     // http://stackoverflow.com/questions/562160/in-java-how-do-i-parse-xml-as-a-string-instead-of-a-file
     public static List parseXml(String xmlString) {
       List photosList = new ArrayList();
-      try {	
-//         File inputFile = new File("input.txt");
-         DocumentBuilderFactory dbFactory 
-            = DocumentBuilderFactory.newInstance();
+      try {
+         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
          DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//         Document doc = dBuilder.parse(inputFile);
          InputSource is = new InputSource(new StringReader(xmlString));
          Document doc = dBuilder.parse(is);
          doc.getDocumentElement().normalize();
@@ -136,14 +127,8 @@ public class NFlickr {
 //               + nNode.getNodeName());
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element eElement = (Element) nNode;
-//                System.out.println("id : " 
-//                     + eElement.getAttribute("id"));
-//                
-//                System.out.println("owner : " 
-//                     + eElement.getAttribute("owner"));
-                
+
                 HashMap hm = new HashMap();
-                // Put elements to the map
                 hm.put("id", eElement.getAttribute("id"));
                 hm.put("owner", eElement.getAttribute("owner"));
                 hm.put("server", eElement.getAttribute("server"));
@@ -153,40 +138,6 @@ public class NFlickr {
                 
                 photosList.add(hm);
 //                System.out.println(photosList.size());
-            }
-         }
-         
-         if (false) {
-            System.out.println("----------------------------");
-            for (int temp = 0; temp < nList.getLength(); temp++) {
-               Node nNode = nList.item(temp);
-               System.out.println("\nCurrent Element :" 
-                  + nNode.getNodeName());
-               if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                  Element eElement = (Element) nNode;
-                  System.out.println("Student roll no : " 
-                     + eElement.getAttribute("rollno"));
-                  System.out.println("First Name : " 
-                     + eElement
-                     .getElementsByTagName("firstname")
-                     .item(0)
-                     .getTextContent());
-                  System.out.println("Last Name : " 
-                  + eElement
-                     .getElementsByTagName("lastname")
-                     .item(0)
-                     .getTextContent());
-                  System.out.println("Nick Name : " 
-                  + eElement
-                     .getElementsByTagName("nickname")
-                     .item(0)
-                     .getTextContent());
-                  System.out.println("Marks : " 
-                  + eElement
-                     .getElementsByTagName("marks")
-                     .item(0)
-                     .getTextContent());
-               }
             }
          }
       } catch (Exception e) {
