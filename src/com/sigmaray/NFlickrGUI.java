@@ -5,14 +5,21 @@
  */
 package com.sigmaray;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  *
  * @author patrick
  */
 public class NFlickrGUI extends javax.swing.JFrame {
+    List urlsList;
 
     /**
      * Creates new form NFlickrGUI
@@ -52,6 +59,11 @@ public class NFlickrGUI extends javax.swing.JFrame {
         jLabel1.setText("jLabel1");
 
         jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -87,10 +99,34 @@ public class NFlickrGUI extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        List urlsList = NFlickr.flickrListToUrlList(NFlickr.getList());
+        urlsList = NFlickr.flickrListToUrlList(NFlickr.getList());
         String t = NFlickr.printRToString(urlsList);
         jTextArea1.setText(t);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private BufferedImage downloadImage(String fullUrlPath) {
+        BufferedImage img = null;
+        try {
+           URL url = new URL(fullUrlPath);
+           img = ImageIO.read(url);
+           ImageIcon icon = new ImageIcon(img);
+//           JOptionPane.showMessageDialog(null, icon);
+        } catch (MalformedURLException e) {
+           e.printStackTrace();
+        } catch (IOException e) {
+           e.printStackTrace();
+        }
+        return img;
+    }
+    
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+//        String imgPath = "/home/patrick/upload_testing_files/000_tuuu_heas_vfdvdf123_the-fading-sunlight-on-the-sunset-wallpaper-1920x1200.jpg";
+//        ImageIcon image = new ImageIcon("C:/Documents and Settings/user/Desktop/hi/xD/JavaApplication2/image.png");
+//        jLabel1.setIcon(new javax.swing.ImageIcon(imgPath));
+        BufferedImage img = downloadImage((String) urlsList.get(0));
+        jLabel1.setIcon(new javax.swing.ImageIcon(img));        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
