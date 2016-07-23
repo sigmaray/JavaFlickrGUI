@@ -60,9 +60,8 @@ public class NFlickrGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("jLabel1");
-
         jButton2.setText(">>");
+        jButton2.setEnabled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -70,6 +69,7 @@ public class NFlickrGUI extends javax.swing.JFrame {
         });
 
         jButton3.setText("<<");
+        jButton3.setEnabled(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -91,19 +91,18 @@ public class NFlickrGUI extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton3)
-                                .addGap(29, 29, 29)
-                                .addComponent(jButton2)
-                                .addGap(29, 29, 29))
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(46, 46, 46))
+                                .addGap(33, 33, 33)
+                                .addComponent(jButton2))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 278, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -115,12 +114,13 @@ public class NFlickrGUI extends javax.swing.JFrame {
                     .addComponent(jButton1))
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -128,13 +128,17 @@ public class NFlickrGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        urlsList = NFlickr.flickrListToUrlList(NFlickr.getList(jTextField1.getText()));
-        String t = NFlickr.printRToString(urlsList);
-        jTextArea1.setText(t);
-        imageIndex = 0;
-        
-        showNextImg();
+        String s = jTextField1.getText();
+        if (s != "") {
+            urlsList = NFlickr.flickrListToUrlList(NFlickr.getList(s));
+            String t = NFlickr.printRToString(urlsList);
+            jTextArea1.setText(t);
+            imageIndex = 0;
+
+            showNextImg();
+            jButton3.setEnabled(true);
+            jButton2.setEnabled(true);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private BufferedImage downloadImage(String fullUrlPath) {
@@ -161,7 +165,11 @@ public class NFlickrGUI extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(img));        
         if (imageIndex < (urlsList.size() - 1)) {
             imageIndex++;
-        }        
+            jButton3.setEnabled(true);
+        }   
+        if (imageIndex == (urlsList.size() - 1)) {
+            jButton2.setEnabled(false);
+        }
     }
     
     private void showPrevImg() {
@@ -169,6 +177,10 @@ public class NFlickrGUI extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(img));        
         if (imageIndex > 0) {
             imageIndex--;
+            jButton2.setEnabled(true);
+        }
+        if (imageIndex == 0) {
+            jButton3.setEnabled(false);
         }
     }
 
