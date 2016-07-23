@@ -3,7 +3,7 @@
 Java application that grabs images from flickr.com and show them in GUI.
 
 I created this application to learn:
-* Basic Java syntax
+* Java syntax
 * Swing
 * Java Threads
 * Flickr API
