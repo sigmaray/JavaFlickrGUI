@@ -25,6 +25,7 @@ import org.xml.sax.InputSource;
 
 import java.awt.Desktop;
 import java.net.URI;
+import java.net.URLEncoder;
 
 public class JavaFlickr {
     static String API_KEY = "4cc2a6e2419deebfe86eca026cfda157";
@@ -72,13 +73,16 @@ public class JavaFlickr {
     }
 
     public static String getUrl(String searchString, int page) {
-        String url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" +
-                API_KEY + "&text=" + searchString + "&safe_search=1&page=" + Integer.toString(page) + "&per_page=" + per_page;
+        String url = "";
+        try{
+            url = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=" +
+                API_KEY + "&text=" + URLEncoder.encode(searchString, "UTF-8") + "&safe_search=1&page=" + Integer.toString(page) + "&per_page=" + per_page;
+        } catch (Exception e) {}
         return url;
     }
     
     public static String buildImgUrl(HashMap item) {
-        String src = "http://farm" + item.get("farm") + ".static.flickr.com/" + item.get("server") + "/" + item.get("id") + "_" + item.get("secret") + "_m.jpg";
+        String src = "http://farm" + item.get("farm") + ".static.flickr.com/" + item.get("server") + "/" + item.get("id") + "_" + item.get("secret") + "_c.jpg";
 //        String flickrUrl = "https://www.flickr.com/photos/" + item.get("owner") + "/" + item.get("id");
         return src;
     }

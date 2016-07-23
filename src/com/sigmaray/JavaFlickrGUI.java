@@ -11,8 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -22,6 +20,7 @@ import javax.swing.SwingUtilities;
  * @author patrick
  */
 public class JavaFlickrGUI extends javax.swing.JFrame {
+
     int imageIndex;
     List urlsList = new ArrayList();
     BufferedImage imageToDownload;
@@ -46,8 +45,8 @@ public class JavaFlickrGUI extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -66,15 +65,7 @@ public class JavaFlickrGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText(">>");
-        jButton2.setEnabled(false);
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jButton3.setText("<<");
+        jButton3.setText(">>");
         jButton3.setEnabled(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -82,9 +73,17 @@ public class JavaFlickrGUI extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("<<");
+        jButton2.setEnabled(false);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Search string");
 
-        jTextField1.setText("pizza");
+        jTextField1.setText("french fries");
 
         jLabel3.setText("   ");
 
@@ -101,23 +100,26 @@ public class JavaFlickrGUI extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
-                        .addComponent(jButton1))
+                        .addGap(26, 26, 26)
+                        .addComponent(jButton1)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(48, 48, 48)
                                 .addComponent(jButton3)
-                                .addGap(53, 53, 53)
-                                .addComponent(jButton2))))
+                                .addGap(489, 489, 489))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(55, 55, 55))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(60, 60, 60)))
-                .addContainerGap())
+                        .addGap(66, 66, 66))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,11 +133,11 @@ public class JavaFlickrGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton2))))
+                            .addComponent(jButton2)
+                            .addComponent(jButton3))))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -150,148 +152,13 @@ public class JavaFlickrGUI extends javax.swing.JFrame {
         downloadUrlListInThread();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void disableButtons() {
-        jButton1.setEnabled(false);
-        jButton2.setEnabled(false);
-        jButton3.setEnabled(false);
-        jLabel4.setText("imageIndex: " + imageIndex + ", urlsList.size(): " + urlsList.size());
-    }
-    
-    private void enableButtons() {
-        jButton1.setEnabled(true);        
-        if (imageIndex > 0) {
-            jButton3.setEnabled(true);
-        }
-        if (imageIndex < (urlsList.size() - 1)) {
-            jButton2.setEnabled(true);
-        }        
-        jLabel4.setText("imageIndex: " + imageIndex + ", urlsList.size(): " + urlsList.size());
-    }
-    
-    private void downloadUrlListInThread() {
-        final String s = jTextField1.getText();
-        if (s == "") {
-            return;
-        }
-        disableButtons();
-        jLabel3.setText("Downloading URLs...");
-        Thread t = new Thread() {
-            @Override public void run() {
-                urlsList = JavaFlickr.flickrListToUrlList(JavaFlickr.getList(s));
-
-//                try {
-//                    Thread.sleep(10000);
-//                } catch (InterruptedException ex) {
-//                    Logger.getLogger(NFlickrGUI.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-
-                SwingUtilities.invokeLater(
-                    new Runnable() {
-                       public void run()
-                       {
-                            jLabel3.setText("");
-                            String t = JavaFlickr.printRToString(urlsList);
-                            jTextArea1.setText(t);
-                            imageIndex = 0;
-                            downloadFirstImageInThread();
-                       }
-                    }
-                );
-            }
-        };
-        t.start();
-    }
-    
-    private void downloadFirstImageInThread() {
-        disableButtons();
-        Thread t = new Thread() {
-            @Override public void run() {
-                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
-                imageToDownload = img;
-                SwingUtilities.invokeLater(
-                    new Runnable() {
-                       public void run()
-                       {
-                            jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
-                            enableButtons();
-                       }
-                    }
-                );
-            }
-        };
-        t.start();
-    }    
-    
-    private void downloadNextImageInThread() {
-        if (imageIndex == (urlsList.size() - 1)) {
-            return;
-        }
-        imageIndex++;
-        disableButtons();
-        Thread t = new Thread() {
-            @Override public void run() {
-                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
-                imageToDownload = img;
-                SwingUtilities.invokeLater(
-                    new Runnable() {
-                       public void run()
-                       {
-                            jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));        
-                            enableButtons();
-                       }
-                    }
-                );
-            }
-        };
-        t.start();
-    }
-    
-    private void downloadPrevImageInThread() {
-        if (imageIndex == 0) {
-            return;
-        }
-        imageIndex--;
-        disableButtons();
-        Thread t = new Thread() {
-            @Override public void run() {
-                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
-                imageToDownload = img;
-                SwingUtilities.invokeLater(
-                    new Runnable() {
-                       public void run()
-                       {
-                            BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
-                            jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));        
-                            enableButtons();
-                       }
-                    }
-                );
-            }
-        };
-        t.start();
-    }
-    
-    private BufferedImage downloadImage(String fullUrlPath) {
-        BufferedImage img = null;
-        try {
-           URL url = new URL(fullUrlPath);
-           img = ImageIO.read(url);
-           ImageIcon icon = new ImageIcon(img);
-        } catch (MalformedURLException e) {
-           e.printStackTrace();
-        } catch (IOException e) {
-           e.printStackTrace();
-        }
-        return img;
-    }
-    
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        downloadNextImageInThread();
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        downloadPrevImageInThread();
+        downloadNextImageInThread();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        downloadPrevImageInThread();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -341,4 +208,138 @@ public class JavaFlickrGUI extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    private void disableButtons() {
+        jButton1.setEnabled(false);
+        jButton3.setEnabled(false);
+        jButton2.setEnabled(false);
+        jLabel4.setText("imageIndex: " + imageIndex + ", urlsList.size(): " + urlsList.size());
+    }
+
+    private void enableButtons() {
+        jButton1.setEnabled(true);
+        if (imageIndex > 0) {
+            jButton2.setEnabled(true);
+        }
+        if (imageIndex < (urlsList.size() - 1)) {
+            jButton3.setEnabled(true);
+        }
+        jLabel4.setText("imageIndex: " + imageIndex + ", urlsList.size(): " + urlsList.size());
+    }
+
+    private void downloadUrlListInThread() {
+        final String s = jTextField1.getText();
+        if (s == "") {
+            return;
+        }
+        disableButtons();
+        jLabel3.setText("Downloading URLs...");
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                urlsList = JavaFlickr.flickrListToUrlList(JavaFlickr.getList(s));
+
+//                try {
+//                    Thread.sleep(10000);
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(NFlickrGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+                SwingUtilities.invokeLater(
+                        new Runnable() {
+                            public void run() {
+                                jLabel3.setText("");
+                                String t = JavaFlickr.printRToString(urlsList);
+                                jTextArea1.setText(t);
+                                imageIndex = 0;
+                                downloadFirstImageInThread();
+                            }
+                        }
+                );
+            }
+        };
+        t.start();
+    }
+
+    private void downloadFirstImageInThread() {
+        disableButtons();
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                SwingUtilities.invokeLater(
+                        new Runnable() {
+                            public void run() {
+                                jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
+                                enableButtons();
+                            }
+                        }
+                );
+            }
+        };
+        t.start();
+    }
+
+    private void downloadNextImageInThread() {
+        if (imageIndex == (urlsList.size() - 1)) {
+            return;
+        }
+        imageIndex++;
+        disableButtons();
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                SwingUtilities.invokeLater(
+                        new Runnable() {
+                            public void run() {
+                                jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
+                                enableButtons();
+                            }
+                        }
+                );
+            }
+        };
+        t.start();
+    }
+
+    private void downloadPrevImageInThread() {
+        if (imageIndex == 0) {
+            return;
+        }
+        imageIndex--;
+        disableButtons();
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                SwingUtilities.invokeLater(
+                        new Runnable() {
+                            public void run() {
+                                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                                jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
+                                enableButtons();
+                            }
+                        }
+                );
+            }
+        };
+        t.start();
+    }
+
+    private BufferedImage downloadImage(String fullUrlPath) {
+        BufferedImage img = null;
+        try {
+            URL url = new URL(fullUrlPath);
+            img = ImageIO.read(url);
+            ImageIcon icon = new ImageIcon(img);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
+    }
 }
