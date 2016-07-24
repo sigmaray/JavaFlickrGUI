@@ -5,6 +5,18 @@
  */
 package com.sigmaray;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author patrick
@@ -36,6 +48,11 @@ public class Carousel extends javax.swing.JFrame {
         jTextField1.setText("Pasta");
 
         jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -66,6 +83,11 @@ public class Carousel extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        downloadUrlListInThread();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -107,4 +129,121 @@ public class Carousel extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+
+    List urlsList = new ArrayList();
+    int imageIndex = 0;
+    int page = 0;
+    BufferedImage imageToDownload;
+
+    private void downloadUrlListInThread() {
+        downloadUrlListInThread(0);
+    }
+    
+    private void downloadUrlListInThread(int page) {
+        final String s = jTextField1.getText();
+        if (s == "") {
+            return;
+        }
+//        disableButtons();
+//        jLabel3.setText("Downloading URLs...");
+        final int ppp = page;
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                urlsList = JavaFlickr.flickrListToUrlList(JavaFlickr.getList(s, ppp));
+
+//                try {
+//                    Thread.sleep(10000);
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(NFlickrGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+                SwingUtilities.invokeLater(
+                        new Runnable() {
+                            public void run() {
+//                                jLabel3.setText("");
+                                imageIndex = 0;
+                                downloadFirstImageInThread();
+                            }
+                        }
+                );
+            }
+        };
+        t.start();
+    }
+    
+    private void downloadFirstImageInThread() {
+//        disableButtons();
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Carousel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                SwingUtilities.invokeLater(
+                        new Runnable() {
+                            public void run() {
+                                jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
+//                                enableButtons();
+                                downloadNextImageInThread();
+                            }
+                        }
+                );
+            }
+        };
+        t.start();
+    }
+
+    private void downloadNextImageInThread() {
+        if (imageIndex == (urlsList.size() - 1)) {
+//            return;
+            imageIndex = 0;
+            page++;
+            urlsList = new ArrayList();
+            downloadUrlListInThread(page);
+            return;
+        }
+        imageIndex++;
+//        disableButtons();
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
+                imageToDownload = img;
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Carousel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                SwingUtilities.invokeLater(
+                        new Runnable() {
+                            public void run() {
+                                jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
+//                                enableButtons();
+                                downloadNextImageInThread();
+                            }
+                        }
+                );
+            }
+        };
+        t.start();
+    }
+    
+    private BufferedImage downloadImage(String fullUrlPath) {
+        BufferedImage img = null;
+        try {
+            URL url = new URL(fullUrlPath);
+            img = ImageIO.read(url);
+            ImageIcon icon = new ImageIcon(img);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
+    }
 }
