@@ -52,9 +52,12 @@ public class JavaFlickr {
 //            e.printStackTrace();
 //        }        
 //    }
-    
     public static List getList(String searchString) {
-        String s = getUrl(searchString);
+        return getList(searchString, 0);
+    }
+    
+    public static List getList(String searchString, int page) {
+        String s = getUrl(searchString, page);
         StringBuffer xo = fileGetContents(s);
         List photosList = parseXml(xo.toString());
         return photosList;
