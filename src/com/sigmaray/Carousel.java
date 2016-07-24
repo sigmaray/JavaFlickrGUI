@@ -42,43 +42,53 @@ public class Carousel extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTextField1.setText("Pasta");
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Download images");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
+        jLabel2.setText("  ");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 860, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(66, Short.MAX_VALUE))
+                        .addGap(70, 70, 70)
+                        .addComponent(jButton1)))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
-                .addGap(36, 36, 36)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17))
         );
 
         pack();
@@ -88,6 +98,10 @@ public class Carousel extends javax.swing.JFrame {
         // TODO add your handling code here:
         downloadUrlListInThread();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -127,6 +141,7 @@ public class Carousel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
@@ -145,8 +160,9 @@ public class Carousel extends javax.swing.JFrame {
         if (s == "") {
             return;
         }
-//        disableButtons();
-//        jLabel3.setText("Downloading URLs...");
+        jButton1.setEnabled(false);
+//        disableButtons();        
+        jLabel2.setText("Downloading URLs...");
         final int ppp = page;
         Thread t = new Thread() {
             @Override
@@ -161,7 +177,7 @@ public class Carousel extends javax.swing.JFrame {
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
-//                                jLabel3.setText("");
+                                jLabel2.setText("");
                                 imageIndex = 0;
                                 downloadFirstImageInThread();
                             }
@@ -174,19 +190,21 @@ public class Carousel extends javax.swing.JFrame {
     
     private void downloadFirstImageInThread() {
 //        disableButtons();
+//        jLabel2.setText("Downloading image...");
         Thread t = new Thread() {
             @Override
             public void run() {
                 BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
                 imageToDownload = img;
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Carousel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
+//                                jLabel2.setText("");
                                 jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
 //                                enableButtons();
                                 downloadNextImageInThread();
@@ -209,19 +227,21 @@ public class Carousel extends javax.swing.JFrame {
         }
         imageIndex++;
 //        disableButtons();
+//        jLabel2.setText("Downloading image...");
         Thread t = new Thread() {
             @Override
             public void run() {
                 BufferedImage img = downloadImage((String) urlsList.get(imageIndex));
                 imageToDownload = img;
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(2000);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Carousel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 SwingUtilities.invokeLater(
                         new Runnable() {
                             public void run() {
+                                jLabel2.setText("");
                                 jLabel1.setIcon(new javax.swing.ImageIcon(imageToDownload));
 //                                enableButtons();
                                 downloadNextImageInThread();
