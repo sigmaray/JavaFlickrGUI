@@ -1,6 +1,6 @@
 # JavaFlickrGUI
 
-Java application that grabs images from flickr.com and show them in GUI.
+Java application that grabs images from flickr.com and shows them in GUI.
 
 I created this application to learn:
 * Java syntax
@@ -16,3 +16,7 @@ java -jar JavaFlickrGUI.jar
 
 ## Screenshot
 ![screenshot](https://raw.githubusercontent.com/sigmaray/JavaFlickrGUI/master/JavaFlickrGUI.png)
+
+## Notes
+
+Code is bad. Refactoring should be done.
